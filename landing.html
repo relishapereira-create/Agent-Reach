@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get the Guide</title>
+<meta name="color-scheme" content="light dark">
+<style>
+  :root {
+    --bg: #fbf7f4;
+    --surface: #ffffff;
+    --surface-2: #f4ece6;
+    --text: #2a1f1d;
+    --muted: #6d5d58;
+    --accent: #b5476b;
+    --accent-ink: #ffffff;
+    --accent-soft: #f6dce4;
+    --gold: #c99a4b;
+    --border: #eadfd8;
+    --shadow: 0 18px 50px -20px rgba(90, 40, 50, .35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #161112;
+      --surface: #201819;
+      --surface-2: #2a2022;
+      --text: #f5ece8;
+      --muted: #bfaea9;
+      --accent: #f08aab;
+      --accent-ink: #2a1016;
+      --accent-soft: #3a2228;
+      --gold: #e3bb72;
+      --border: #3a2d2f;
+      --shadow: 0 18px 50px -20px rgba(0, 0, 0, .7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #161112; --surface: #201819; --surface-2: #2a2022; --text: #f5ece8;
+    --muted: #bfaea9; --accent: #f08aab; --accent-ink: #2a1016; --accent-soft: #3a2228;
+    --gold: #e3bb72; --border: #3a2d2f; --shadow: 0 18px 50px -20px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: ui-serif, Georgia, "Times New Roman", serif; line-height: 1.15; margin: 0 0 .5em; letter-spacing: -.01em; }
+  h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); }
+  h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); }
+  h3 { font-size: 1.2rem; }
+  p { margin: 0 0 1em; }
+  a { color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+  section { padding: 72px 0; }
+  .eyebrow { display: inline-block; font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .muted { color: var(--muted); }
+  .skip { position: absolute; left: -999px; top: 8px; background: var(--accent); color: var(--accent-ink); padding: 8px 14px; border-radius: 8px; z-index: 100; }
+  .skip:focus { left: 8px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 52px; padding: 14px 28px; border-radius: 999px; border: 0;
+    background: var(--accent); color: var(--accent-ink); font: inherit; font-weight: 700;
+    text-decoration: none; cursor: pointer; box-shadow: var(--shadow);
+    transition: transform .18s ease, filter .18s ease;
+  }
+  .btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+  .btn:focus-visible, .theme-toggle:focus-visible, summary:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .btn .price-pill { background: rgba(255,255,255,.22); padding: 2px 10px; border-radius: 999px; font-size: .95em; }
+  :root[data-theme="dark"] .btn .price-pill { background: rgba(0,0,0,.18); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn .price-pill { background: rgba(0,0,0,.18); } }
+
+  /* Top bar */
+  .topbar { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; }
+  .brand { font-family: ui-serif, Georgia, serif; font-weight: 700; font-size: 1.05rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .theme-toggle { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-size: 1.1rem; }
+  .topbar .btn { min-height: 42px; padding: 8px 18px; font-size: .92rem; box-shadow: none; }
+
+  /* Hero */
+  .hero { padding-top: 56px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: -20% -10% auto auto; width: 520px; height: 520px; border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-soft), transparent 70%); z-index: -1;
+  }
+  .hero-grid { display: grid; gap: 48px; align-items: center; grid-template-columns: 1fr; }
+  @media (min-width: 860px) { .hero-grid { grid-template-columns: 1.15fr .85fr; } }
+  .hero .lede { font-size: 1.15rem; color: var(--muted); max-width: 36em; }
+  .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 28px; }
+  .rating { display: inline-flex; align-items: center; gap: 8px; font-size: .95rem; color: var(--muted); }
+  .stars { color: var(--gold); letter-spacing: 2px; }
+
+  /* CSS book mockup */
+  .book-stage { display: flex; justify-content: center; perspective: 1400px; padding: 20px 0; }
+  .book {
+    width: min(280px, 72vw); aspect-ratio: 3 / 4; border-radius: 6px 16px 16px 6px; position: relative;
+    background: linear-gradient(145deg, var(--accent) 0%, #7d2b48 100%);
+    color: #fff; padding: 34px 26px; display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: var(--shadow), inset 10px 0 18px -10px rgba(0,0,0,.45);
+    transform: rotateY(-16deg) rotateX(4deg); transition: transform .6s ease;
+  }
+  .book:hover { transform: rotateY(-4deg) rotateX(0); }
+  .book::after { content: ""; position: absolute; left: 12px; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,.25); }
+  .book .b-tag { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; opacity: .85; }
+  .book .b-title { font-family: ui-serif, Georgia, serif; font-size: 1.7rem; line-height: 1.15; font-weight: 700; overflow-wrap: anywhere; }
+  .book .b-line { height: 3px; width: 56px; background: var(--gold); border-radius: 2px; }
+  .book .b-foot { font-size: .8rem; opacity: .85; }
+
+  /* Cards */
+  .grid-3 { display: grid; gap: 20px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px; }
+  .icon { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin-bottom: 16px; }
+  .icon svg { width: 24px; height: 24px; }
+
+  .alt { background: var(--surface-2); }
+  .two-col { display: grid; gap: 40px; grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 860px) { .two-col { grid-template-columns: 1fr 1fr; } }
+  .checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .checklist li { display: flex; gap: 12px; align-items: flex-start; }
+  .checklist .tick { flex: 0 0 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-size: .8rem; font-weight: 800; margin-top: 2px; }
+  .description { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px; overflow-wrap: anywhere; }
+  .description img { max-width: 100%; height: auto; border-radius: 12px; }
+
+  .steps { counter-reset: step; display: grid; gap: 20px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+  .step { position: relative; padding-top: 54px; }
+  .step::before { counter-increment: step; content: counter(step); position: absolute; top: 0; left: 0; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent); color: var(--accent); display: grid; place-items: center; font-weight: 800; }
+
+  /* FAQ */
+  details { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 0 22px; margin-bottom: 12px; }
+  summary { cursor: pointer; padding: 18px 0; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--accent); font-size: 1.4rem; line-height: 1; transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { color: var(--muted); padding-bottom: 18px; margin: 0; }
+
+  /* Final CTA */
+  .final { text-align: center; }
+  .final .card { max-width: 640px; margin: 0 auto; padding: 44px 28px; box-shadow: var(--shadow); }
+  .big-price { font-family: ui-serif, Georgia, serif; font-size: 3rem; font-weight: 700; color: var(--accent); margin: 8px 0 20px; }
+  .guarantee { font-size: .9rem; color: var(--muted); margin-top: 18px; }
+  footer { padding: 32px 0 110px; text-align: center; color: var(--muted); font-size: .9rem; border-top: 1px solid var(--border); }
+  @media (min-width: 720px) { footer { padding-bottom: 40px; } }
+
+  /* Sticky mobile buy bar */
+  .mobile-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    transform: translateY(110%); transition: transform .3s ease;
+  }
+  .mobile-bar.show { transform: translateY(0); }
+  .mobile-bar .btn { min-height: 46px; padding: 10px 22px; box-shadow: none; }
+  .mobile-bar strong { font-size: 1.1rem; }
+  @media (min-width: 720px) { .mobile-bar { display: none; } }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .book, .btn, .mobile-bar { transition: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <span class="brand" data-gumroad-field="name">Your Guide</span>
+    <div class="topbar-actions">
+      <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch color theme">◐</button>
+      <a class="btn" href="#buy" data-gumroad-action="buy">Get it</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Made by a busy mom, for busy creators</span>
+        <h1 data-gumroad-field="name">Your Guide</h1>
+        <p class="lede">The step-by-step playbook I wish I had when I was juggling kids, content and a business. No fluff, no tech overwhelm. Just clear steps you can start tonight.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#buy" data-gumroad-action="buy">
+            I want this! <span class="price-pill" data-gumroad-field="price">$0</span>
+          </a>
+          <span class="rating">
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <span><span data-gumroad-field="rating">New release</span> · <span data-gumroad-field="review-count">Be the first to review</span></span>
+          </span>
+        </div>
+        <p class="muted" style="margin-top:16px;font-size:.92rem">Instant download · Read on any device · Yours forever</p>
+      </div>
+      <div class="book-stage" aria-hidden="true">
+        <div class="book">
+          <span class="b-tag">Digital Playbook</span>
+          <div>
+            <div class="b-line"></div>
+            <div class="b-title" data-gumroad-field="name">Your Guide</div>
+          </div>
+          <span class="b-foot">Instant PDF download</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pain / promise -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="reveal" style="max-width:720px">
+        <span class="eyebrow">Sound familiar?</span>
+        <h2>You've got big ideas. You just don't have extra hours.</h2>
+        <p class="muted">Between school runs, dinner and everything else, there's barely time to post, let alone figure out what actually works. This guide cuts straight to it, so the little time you do have goes into the stuff that moves the needle.</p>
+      </div>
+      <div class="grid-3" style="margin-top:36px">
+        <div class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>Save hours every week</h3>
+          <p class="muted">Simple systems you can set up once and reuse, instead of starting from scratch every time.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/></svg></div>
+          <h3>Clear, plain-English steps</h3>
+          <p class="muted">No jargon and no 40-tab rabbit holes. Follow along in order and you'll know exactly what to do next.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg></div>
+          <h3>Built from real life</h3>
+          <p class="muted">Tested while running pages, channels and stores with two kids at home. If it works for me, it'll work for you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What's inside (live description) -->
+  <section>
+    <div class="wrap two-col">
+      <div class="reveal">
+        <span class="eyebrow">What's inside</span>
+        <h2>Everything you need, nothing you don't.</h2>
+        <ul class="checklist">
+          <li><span class="tick" aria-hidden="true">✓</span><span>A clear roadmap from "where do I start?" to done</span></li>
+          <li><span class="tick" aria-hidden="true">✓</span><span>Copy-and-paste templates so you're never staring at a blank page</span></li>
+          <li><span class="tick" aria-hidden="true">✓</span><span>Quick wins you can finish in a single nap time</span></li>
+          <li><span class="tick" aria-hidden="true">✓</span><span>My honest notes on what to skip (and save money on)</span></li>
+        </ul>
+        <div style="margin-top:28px">
+          <a class="btn" href="#buy" data-gumroad-action="buy">Get instant access</a>
+        </div>
+      </div>
+      <div class="description reveal" data-gumroad-field="description">
+        <p>Full product details will appear here.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="reveal" style="text-align:center;max-width:640px;margin:0 auto 40px">
+        <span class="eyebrow">How it works</span>
+        <h2>Start in under five minutes</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><h3>Grab your copy</h3><p class="muted">Tap the button, check out securely with Gumroad.</p></div>
+        <div class="step reveal"><h3>Download instantly</h3><p class="muted">It lands in your inbox and your Gumroad library right away.</p></div>
+        <div class="step reveal"><h3>Take the first step</h3><p class="muted">Open it on your phone tonight and knock out your first quick win.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="wrap" style="max-width:760px">
+      <div class="reveal" style="text-align:center;margin-bottom:32px">
+        <span class="eyebrow">Questions</span>
+        <h2>Good to know</h2>
+      </div>
+      <details class="reveal"><summary>Is this beginner friendly?</summary><p>Yes. It's written in everyday language and walks you through each step. No tech background needed.</p></details>
+      <details class="reveal"><summary>How do I get it after I buy?</summary><p>You'll get an instant download link by email, and it's always saved in your Gumroad library.</p></details>
+      <details class="reveal"><summary>Can I read it on my phone?</summary><p>Absolutely. It works on phone, tablet or computer, whatever's closest when you have a spare minute.</p></details>
+      <details class="reveal"><summary>What if I have questions later?</summary><p>Reply to your receipt email and it comes straight to me. I read every message.</p></details>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final alt" id="buy">
+    <div class="wrap">
+      <div class="card reveal">
+        <span class="eyebrow">Ready when you are</span>
+        <h2 data-gumroad-field="name">Your Guide</h2>
+        <div class="big-price" data-gumroad-field="price">$0</div>
+        <a class="btn" href="#buy" data-gumroad-action="buy" style="width:100%;max-width:360px">I want this!</a>
+        <p class="guarantee">Secure checkout by Gumroad · Instant download</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Made with love (and a lot of coffee) by a mom who gets it.</div>
+</footer>
+
+<div class="mobile-bar" id="mobile-bar" aria-hidden="true">
+  <strong data-gumroad-field="price">$0</strong>
+  <a class="btn" href="#buy" data-gumroad-action="buy" tabindex="-1">I want this!</a>
+</div>
+
+<script>
+(function () {
+  // Theme toggle (light / dark), remembers choice when storage is available
+  var root = document.documentElement, key = "gr-theme";
+  try { var saved = localStorage.getItem(key); if (saved) root.setAttribute("data-theme", saved); } catch (e) {}
+  var btn = document.getElementById("theme-toggle");
+  btn.addEventListener("click", function () {
+    var current = root.getAttribute("data-theme") ||
+      (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    var next = current === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    btn.setAttribute("aria-label", "Switch to " + (next === "dark" ? "light" : "dark") + " theme");
+    try { localStorage.setItem(key, next); } catch (e) {}
+  });
+
+  // Scroll reveal
+  var els = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    els.forEach(function (el) { io.observe(el); });
+  } else {
+    els.forEach(function (el) { el.classList.add("in"); });
+  }
+
+  // Sticky mobile buy bar after scrolling past the hero
+  var bar = document.getElementById("mobile-bar");
+  function onScroll() {
+    var show = window.scrollY > 600;
+    bar.classList.toggle("show", show);
+    bar.setAttribute("aria-hidden", show ? "false" : "true");
+    bar.querySelector("a").setAttribute("tabindex", show ? "0" : "-1");
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
