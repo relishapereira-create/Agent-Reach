@@ -71,9 +71,17 @@
     const mechanism = document.querySelector('.mechanism');
     const toggle = document.querySelector('.motion-toggle');
 
+    if (!mechanism) {
+      console.error('Mechanism element not found');
+    }
+    if (!toggle) {
+      console.error('Toggle button not found');
+    }
+
     let paused = false;
     let rotation = 0;
     let startTime = Date.now();
+    let frameCount = 0;
 
     function updateToggle() {
       toggle.setAttribute('aria-pressed', String(paused));
@@ -82,15 +90,21 @@
 
     toggle.addEventListener('click', () => {
       paused = !paused;
-      if (!paused) startTime = Date.now() - (rotation * 50); // Adjust start time to continue smoothly
+      if (!paused) {
+        startTime = Date.now() - (rotation * 50000 / 360);
+      }
       updateToggle();
     });
 
     function animate() {
-      if (!paused) {
+      frameCount++;
+      if (!paused && mechanism) {
         const elapsed = Date.now() - startTime;
-        rotation = (elapsed * 360 / 50000) % 360; // Complete 360 degrees in 50 seconds
+        rotation = (elapsed * 360 / 50000) % 360;
         mechanism.style.transform = `rotate(${rotation}deg)`;
+        if (frameCount % 60 === 0) {
+          console.log('Rotating:', rotation.toFixed(1), 'deg');
+        }
       }
       requestAnimationFrame(animate);
     }
