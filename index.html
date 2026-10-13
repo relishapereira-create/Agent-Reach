@@ -93,19 +93,23 @@
     toggle.addEventListener('click', () => { paused = !paused; updateToggle(); });
     reducedMotion.addEventListener('change', event => { paused = event.matches; updateToggle(); });
 
+    let frameCount = 0;
     function frame(time) {
-      if (document.hidden) return requestAnimationFrame(frame);
-      let elapsed = 16;
-      if (!paused) {
-        elapsedAuto += elapsed;
+      frameCount++;
+      if (!document.hidden && !paused) {
+        elapsedAuto += 16;
         while (elapsedAuto >= cycle) { elapsedAuto -= cycle; autoIndex = (autoIndex + 1) % angles.length; }
         rotation = automaticPosition();
+        render();
       }
-      render();
       requestAnimationFrame(frame);
     }
 
-    updateToggle(); render(); requestAnimationFrame(frame);
+    // Set initial rotation
+    rotation = 0;
+    updateToggle();
+    render();
+    requestAnimationFrame(frame);
   </script>
 </body>
 </html>
