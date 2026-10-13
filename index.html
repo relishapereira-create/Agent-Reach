@@ -11,8 +11,8 @@
     body { margin:0; background:var(--paper); color:var(--ink); font-family:Arial,sans-serif; }
     main { width:min(100%,680px); margin:auto; padding:40px 20px 50px; }
     .dial { width:100%; aspect-ratio:1; position:relative; isolation:isolate; overflow:visible; margin-bottom:34px; }
-    .mechanism { position:absolute; inset:0; border-radius:50%; background:#f8f7f3; border:5px solid #000; box-shadow:inset 0 0 20px rgba(0,0,0,0.1),0 9px 18px #0002; }
-    .connection { position:absolute; left:var(--x); top:var(--y); width:60px; height:60px; border-radius:50%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:var(--accent); background:radial-gradient(circle at 35% 25%,#e8e6e0 0%,#d4d0c8 40%,#bbb9b5 80%); border:3px solid #1a1a1a; box-shadow:inset 0 0 0 1px #fff,inset 2px 2px 4px rgba(0,0,0,0.3),inset -2px -2px 4px rgba(255,255,255,0.4),0 4px 8px rgba(0,0,0,0.4); text-decoration:none; font-weight:700; -webkit-tap-highlight-color:transparent; z-index:10; cursor:pointer; }
+    .mechanism { position:absolute; inset:0; border-radius:50%; background:#87CEEB; border:5px solid #FFD700; box-shadow:inset 0 0 20px rgba(0,0,0,0.1),0 9px 18px #0002; }
+    .connection { position:absolute; left:var(--x); top:var(--y); width:60px; height:60px; border-radius:50%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:var(--accent); background:radial-gradient(circle at 35% 25%,#e8e6e0 0%,#d4d0c8 40%,#bbb9b5 80%); border:3px solid #FFD700; box-shadow:inset 0 0 0 1px #fff,inset 2px 2px 4px rgba(0,0,0,0.3),inset -2px -2px 4px rgba(255,255,255,0.4),0 4px 8px rgba(0,0,0,0.4); text-decoration:none; font-weight:700; -webkit-tap-highlight-color:transparent; z-index:10; cursor:pointer; }
     .connection .emoji { font-size:24px; }
     .connection .label { font-size:7px; font-weight:700; color:#1a1a1a; line-height:1; }
     .connection img { width:55%; height:55%; object-fit:contain; }
@@ -20,8 +20,8 @@
     .connection.is-selected { outline:3px solid var(--accent); outline-offset:5px; }
     a:focus-visible, button:focus-visible { outline:3px solid #216dca; outline-offset:6px; }
     .center { position:absolute; inset:27%; border-radius:50%; background:radial-gradient(circle at 35% 20%,#faf5df,#e3ddc1); border:3px solid #e8ebeb; box-shadow:0 0 0 3px #6b7172,0 0 0 6px #f1f4f4,0 4px 6px 7px #0006,inset 0 0 9px #393f3d77; pointer-events:none; }
-    .arch { position:absolute; inset:0; width:100%; height:100%; font:700 11px Arial,sans-serif; letter-spacing:1.2px; fill:var(--ink); }
-    h1 { position:absolute; inset:26% 6% 12%; margin:0; display:flex; flex-direction:column; justify-content:center; align-items:center; font-family:Georgia,serif; font-style:italic; font-size:clamp(19px,5.5vw,38px); line-height:1.1; text-align:center; color:#800020; }
+    .arch { position:absolute; inset:0; width:100%; height:100%; font:700 11px Arial,sans-serif; letter-spacing:1.2px; fill:#FFD700; }
+    h1 { position:absolute; inset:26% 6% 12%; margin:0; display:flex; flex-direction:column; justify-content:center; align-items:center; font-family:'Brush Script MT','Lucida Handwriting',cursive; font-style:italic; font-size:clamp(19px,5.5vw,38px); line-height:1.1; text-align:center; color:#FFD700; font-weight:700; }
     .stop { position:absolute; left:87%; top:55%; width:9%; height:19%; border-radius:55% 25% 15% 15%; transform:rotate(-30deg); background:linear-gradient(92deg,#3f484d,#f7fbfb 28%,#b9c4cb 48%,#fff 67%,#4e5659); border:1px solid #697076; box-shadow:3px 5px 5px #0006,inset 0 0 0 2px #ffffffa8; pointer-events:none; }
     .link-directory { width:max-content; max-width:100%; margin:0 auto; }
     .link-directory a, .pending { display:flex; gap:24px; align-items:center; justify-content:space-between; padding:9px 0; min-height:44px; text-decoration:none; color:inherit; font:600 clamp(16px,2.9vw,19px)/1.35 'Gill Sans','Gill Sans MT',Arial,sans-serif; text-transform:uppercase; letter-spacing:.04em; }
