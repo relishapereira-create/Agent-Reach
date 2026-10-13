@@ -68,159 +68,43 @@
     <noscript>This directory needs JavaScript to load its configured links. Please enable JavaScript.</noscript>
   </main>
   <script>
-    const SITE = {
-      name: ['Relisha', 'Pereira'],
-      arch: '',
-      background: '#f8f7f3',
-      ink: '#800020',
-      autoplay: true,
-      links: [
-        { label:'Relisha', url:'https://www.instagram.com/relisha_pereira_28', initials:'RE', color:'#800020', icon:'' },
-        { label:'Gisselle', url:'https://instagram.com/askgisselle', initials:'GI', color:'#800020', icon:'' },
-        { label:'Amazon', url:'https://a.co/d/056rr3AH', initials:'AM', color:'#800020', icon:'' },
-        { label:'Pinterest', url:'https://pin.it/15CGPyyHj', initials:'PI', color:'#800020', icon:'' },
-        { label:'Linktree', url:'https://linktr.ee/Relisha28', initials:'LI', color:'#800020', icon:'' },
-        { label:'Stanstore', url:'', initials:'ST', color:'#800020', icon:'' },
-        { label:'Add more', url:'', initials:'+', color:'#800020', icon:'' }
-      ]
-    };
-
-    function safeDestination(value) {
-      if (typeof value !== 'string' || !value.trim()) return null;
-      try {
-        const url = new URL(value.trim());
-        if (['https:', 'http:'].includes(url.protocol)) return url.username || url.password ? null : url.href;
-        if (url.protocol === 'mailto:' && /^[^\s@?]+@[^\s@?]+\.[^\s@?]+$/.test(url.pathname)) return url.href;
-        if (url.protocol === 'tel:' && /^\+?[\d(). -]+$/.test(url.pathname) && /\d/.test(url.pathname)) return url.href;
-      } catch {}
-      return null;
-    }
-
     const modulo = value => ((value % 360) + 360) % 360;
     const ease = value => value < .5 ? 4 * value ** 3 : 1 - (-2 * value + 2) ** 3 / 2;
-    function createDialMotion({ angles, stopAngle = 22, reduced = false, onNavigate }) {
-      let rotation = 0, paused = reduced, engaged = false, selection = null, elapsedAuto = 0, autoIndex = 0;
-      const rest = 450, wind = 560, hold = 180, unwind = 920, cycle = rest + wind + hold + unwind;
-      function automaticPosition() {
-        const turn = modulo(stopAngle - angles[autoIndex]);
-        if (elapsedAuto <= rest) return 0;
-        if (elapsedAuto <= rest + wind) return turn * ease((elapsedAuto - rest) / wind);
-        if (elapsedAuto <= rest + wind + hold) return turn;
-        return turn * (1 - (elapsedAuto - rest - wind - hold) / unwind);
-      }
-      return {
-        get rotation() { return rotation; },
-        get paused() { return paused; },
-        setEngaged(value) { engaged = value; },
-        setPaused(value) { paused = value; },
-        setReduced(value) { reduced = value; paused = value; if (selection && value) selection.duration = 0; },
-        cancelSelection() { selection = null; rotation = 0; elapsedAuto = 0; },
-        select(index, href) {
-          const distance = modulo(stopAngle - angles[index] - rotation);
-          selection = { start:rotation, end:rotation + distance, elapsed:0, duration:reduced ? 0 : 480 + distance * 1.6, href, index };
-        },
-        advance(elapsed) {
-          if (!Number.isFinite(elapsed) || elapsed < 0) return;
-          if (selection) {
-            selection.elapsed += elapsed;
-            const progress = selection.duration === 0 ? 1 : Math.min(selection.elapsed / selection.duration, 1);
-            rotation = selection.start + (selection.end - selection.start) * ease(progress);
-            if (selection.elapsed >= selection.duration + (reduced ? 0 : 180)) {
-              const href = selection.href;
-              autoIndex = selection.index; selection = null; rotation = modulo(rotation);
-              elapsedAuto = rest + wind + hold;
-              onNavigate(href);
-            }
-          } else if (!paused && !engaged) {
-            elapsedAuto += elapsed;
-            while (elapsedAuto >= cycle) { elapsedAuto -= cycle; autoIndex = (autoIndex + 1) % angles.length; }
-            rotation = automaticPosition();
-          }
-        }
-      };
-    }
 
-    const dial = document.querySelector('.dial');
+    const angles = [-48, -90, -132, -174, -216, -258, -300];
     const mechanism = document.querySelector('.mechanism');
-    const directory = document.querySelector('.link-directory ul');
     const toggle = document.querySelector('.motion-toggle');
-    const status = document.querySelector('#dial-status');
-    const note = document.querySelector('.setup-note');
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-    if (SITE.links.length < 4 || SITE.links.length > 9) throw new Error('Use 4–9 circles, or adapt the artwork and layout first.');
-    document.documentElement.style.setProperty('--paper', SITE.background);
-    document.documentElement.style.setProperty('--ink', SITE.ink);
-    document.title = SITE.name.join(' ') + ' · Rotary Directory';
-    SITE.name.forEach(line => {
-      const span = document.createElement('span'); span.textContent = line; document.querySelector('h1').append(span);
-    });
-    const angles = SITE.links.map((_, i) => -48 - 252 * i / (SITE.links.length - 1));
-    const circles = [], textLinks = [];
-    let missing = 0;
-    SITE.links.forEach((item, i) => {
-      const href = safeDestination(item.url);
-      const circle = document.createElement(href ? 'a' : 'span');
-      circle.className = 'connection';
-      circle.style.setProperty('--x', `${50 + 39 * Math.cos(angles[i] * Math.PI / 180)}%`);
-      circle.style.setProperty('--y', `${50 + 39 * Math.sin(angles[i] * Math.PI / 180)}%`);
-      circle.style.setProperty('--accent', item.color || '#333');
-      circle.setAttribute('aria-label', item.label + (href ? '' : ' — add your link'));
-      circle.title = item.label + (href ? '' : ' — add your link');
-      if (href) circle.href = href;
-      else { circle.setAttribute('aria-disabled', 'true'); missing++; }
-      const initials = document.createElement('span'); initials.textContent = item.initials || item.label.slice(0, 2); initials.setAttribute('aria-hidden', 'true');
-      circle.append(initials);
-      if (item.icon) {
-        const image = document.createElement('img'); image.alt = ''; image.src = item.icon; initials.hidden = true;
-        image.addEventListener('error', () => { image.remove(); initials.hidden = false; }); circle.append(image);
-      }
-      const row = document.createElement('li');
-      const link = document.createElement(href ? 'a' : 'span');
-      if (href) link.href = href; else link.className = 'pending';
-      const label = document.createElement('span'); label.className = 'label'; label.textContent = item.label; link.append(label);
-      const end = document.createElement(href ? 'span' : 'small'); end.textContent = href ? '↗' : 'Add your link';
-      if (href) { end.className = 'arrow'; end.setAttribute('aria-hidden', 'true'); }
-      link.append(end); row.append(link); directory.append(row); mechanism.append(circle);
-      circles.push(circle); textLinks.push(link);
-    });
-    if (missing) { note.hidden = false; note.textContent = `${missing} ${missing === 1 ? 'circle is' : 'circles are'} waiting for a link.`; }
 
-    let pointerInside = false, keyboardInside = false, touchHeld = false, previousTime;
-    const motion = createDialMotion({ angles, reduced:reducedMotion.matches, onNavigate:href => {
-      status.textContent = ''; circles.forEach(el => el.classList.remove('is-selected')); window.location.assign(href);
-    }});
-    if (!SITE.autoplay) motion.setPaused(true);
-    function updateToggle() { toggle.setAttribute('aria-pressed', String(motion.paused)); toggle.textContent = motion.paused ? 'Resume rotation' : 'Pause rotation'; }
-    function render() { mechanism.style.transform = `rotate(${motion.rotation}deg)`; }
-    function updateEngagement() { motion.setEngaged(pointerInside || keyboardInside || touchHeld); }
-    function select(event, index) {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.defaultPrevented) return;
-      event.preventDefault();
-      status.textContent = `Opening ${SITE.links[index].label}`;
-      circles.forEach((el, i) => el.classList.toggle('is-selected', index === i));
-      motion.select(index, circles[index].href);
-      if (reducedMotion.matches) { motion.advance(0); render(); }
+    let rotation = 0, paused = reducedMotion.matches, elapsedAuto = 0, autoIndex = 0;
+    const rest = 450, wind = 560, hold = 180, unwind = 920, cycle = rest + wind + hold + unwind;
+
+    function automaticPosition() {
+      const turn = modulo(22 - angles[autoIndex]);
+      if (elapsedAuto <= rest) return 0;
+      if (elapsedAuto <= rest + wind) return turn * ease((elapsedAuto - rest) / wind);
+      if (elapsedAuto <= rest + wind + hold) return turn;
+      return turn * (1 - (elapsedAuto - rest - wind - hold) / unwind);
     }
-    circles.forEach((circle, i) => { if (circle.href) {
-      circle.addEventListener('click', event => select(event, i));
-      textLinks[i].addEventListener('click', event => select(event, i));
-    }});
-    dial.addEventListener('pointerdown', event => { if (event.pointerType === 'touch') { touchHeld = true; updateEngagement(); } });
-    function releaseTouch(event) { if (event.pointerType === 'touch') { touchHeld = false; updateEngagement(); } }
-    window.addEventListener('pointerup', releaseTouch); window.addEventListener('pointercancel', releaseTouch);
-    dial.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') pointerInside = true; updateEngagement(); });
-    dial.addEventListener('pointerleave', () => { pointerInside = false; updateEngagement(); });
-    document.querySelector('main').addEventListener('focusin', () => { keyboardInside = document.activeElement.matches(':focus-visible'); updateEngagement(); });
-    document.querySelector('main').addEventListener('focusout', () => requestAnimationFrame(() => { keyboardInside = Boolean(document.activeElement?.matches(':focus-visible')); updateEngagement(); }));
-    toggle.addEventListener('click', () => { motion.setPaused(!motion.paused); updateToggle(); });
-    reducedMotion.addEventListener('change', event => { motion.setReduced(event.matches); if (!SITE.autoplay) motion.setPaused(true); updateToggle(); });
-    document.addEventListener('visibilitychange', () => { previousTime = undefined; });
-    window.addEventListener('pageshow', () => { motion.cancelSelection(); touchHeld = false; pointerInside = false; updateEngagement(); previousTime = undefined; status.textContent = ''; circles.forEach(el => el.classList.remove('is-selected')); render(); });
+
+    function render() { mechanism.style.transform = `rotate(${rotation}deg)`; }
+    function updateToggle() { toggle.setAttribute('aria-pressed', String(paused)); toggle.textContent = paused ? 'Resume rotation' : 'Pause rotation'; }
+
+    toggle.addEventListener('click', () => { paused = !paused; updateToggle(); });
+    reducedMotion.addEventListener('change', event => { paused = event.matches; updateToggle(); });
+
     function frame(time) {
-      const elapsed = previousTime === undefined ? 0 : Math.min(time - previousTime, 64); previousTime = time;
-      if (!document.hidden) { motion.advance(elapsed); render(); }
+      if (document.hidden) return requestAnimationFrame(frame);
+      let elapsed = 16;
+      if (!paused) {
+        elapsedAuto += elapsed;
+        while (elapsedAuto >= cycle) { elapsedAuto -= cycle; autoIndex = (autoIndex + 1) % angles.length; }
+        rotation = automaticPosition();
+      }
+      render();
       requestAnimationFrame(frame);
     }
+
     updateToggle(); render(); requestAnimationFrame(frame);
   </script>
 </body>
