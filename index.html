@@ -68,48 +68,35 @@
     <noscript>This directory needs JavaScript to load its configured links. Please enable JavaScript.</noscript>
   </main>
   <script>
-    const modulo = value => ((value % 360) + 360) % 360;
-    const ease = value => value < .5 ? 4 * value ** 3 : 1 - (-2 * value + 2) ** 3 / 2;
-
-    const angles = [-48, -90, -132, -174, -216, -258, -300];
     const mechanism = document.querySelector('.mechanism');
     const toggle = document.querySelector('.motion-toggle');
-    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
-    let rotation = 0, paused = reducedMotion.matches, elapsedAuto = 0, autoIndex = 0;
-    const rest = 450, wind = 560, hold = 180, unwind = 920, cycle = rest + wind + hold + unwind;
+    let paused = false;
+    let rotation = 0;
+    let startTime = Date.now();
 
-    function automaticPosition() {
-      const turn = modulo(22 - angles[autoIndex]);
-      if (elapsedAuto <= rest) return 0;
-      if (elapsedAuto <= rest + wind) return turn * ease((elapsedAuto - rest) / wind);
-      if (elapsedAuto <= rest + wind + hold) return turn;
-      return turn * (1 - (elapsedAuto - rest - wind - hold) / unwind);
+    function updateToggle() {
+      toggle.setAttribute('aria-pressed', String(paused));
+      toggle.textContent = paused ? 'Resume rotation' : 'Pause rotation';
     }
 
-    function render() { mechanism.style.transform = `rotate(${rotation}deg)`; }
-    function updateToggle() { toggle.setAttribute('aria-pressed', String(paused)); toggle.textContent = paused ? 'Resume rotation' : 'Pause rotation'; }
+    toggle.addEventListener('click', () => {
+      paused = !paused;
+      if (!paused) startTime = Date.now() - (rotation * 50); // Adjust start time to continue smoothly
+      updateToggle();
+    });
 
-    toggle.addEventListener('click', () => { paused = !paused; updateToggle(); });
-    reducedMotion.addEventListener('change', event => { paused = event.matches; updateToggle(); });
-
-    let frameCount = 0;
-    function frame(time) {
-      frameCount++;
-      if (!document.hidden && !paused) {
-        elapsedAuto += 16;
-        while (elapsedAuto >= cycle) { elapsedAuto -= cycle; autoIndex = (autoIndex + 1) % angles.length; }
-        rotation = automaticPosition();
-        render();
+    function animate() {
+      if (!paused) {
+        const elapsed = Date.now() - startTime;
+        rotation = (elapsed * 360 / 50000) % 360; // Complete 360 degrees in 50 seconds
+        mechanism.style.transform = `rotate(${rotation}deg)`;
       }
-      requestAnimationFrame(frame);
+      requestAnimationFrame(animate);
     }
 
-    // Set initial rotation
-    rotation = 0;
     updateToggle();
-    render();
-    requestAnimationFrame(frame);
+    animate();
   </script>
 </body>
 </html>
