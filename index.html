@@ -65,18 +65,13 @@
     <div class="controls"><button class="motion-toggle" type="button" aria-pressed="false">Pause rotation</button></div>
     <p class="setup-note" hidden></p>
     <p id="dial-status" class="sr-only" aria-live="polite"></p>
+    <p id="debug-rotation" style="text-align:center; font-size:14px; color:#666; margin-top:20px;"></p>
     <noscript>This directory needs JavaScript to load its configured links. Please enable JavaScript.</noscript>
   </main>
   <script>
     const mechanism = document.querySelector('.mechanism');
     const toggle = document.querySelector('.motion-toggle');
-
-    if (!mechanism) {
-      console.error('Mechanism element not found');
-    }
-    if (!toggle) {
-      console.error('Toggle button not found');
-    }
+    const debugDisplay = document.querySelector('#debug-rotation');
 
     let paused = false;
     let rotation = 0;
@@ -102,9 +97,9 @@
         const elapsed = Date.now() - startTime;
         rotation = (elapsed * 360 / 50000) % 360;
         mechanism.style.transform = `rotate(${rotation}deg)`;
-        if (frameCount % 60 === 0) {
-          console.log('Rotating:', rotation.toFixed(1), 'deg');
-        }
+      }
+      if (frameCount % 30 === 0 && debugDisplay) {
+        debugDisplay.textContent = `Rotation: ${rotation.toFixed(0)}° | Status: ${paused ? 'paused' : 'rotating'}`;
       }
       requestAnimationFrame(animate);
     }
